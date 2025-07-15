@@ -6,7 +6,6 @@ This project demonstrates a complete CI/CD pipeline for a Spring Boot microservi
 - **GitHub Actions** with a **self-hosted runner** for automation
 
 ---
-
 ## 🌟 Features
 
 - RESTful Spring Boot microservice (`/` and `/greeting` endpoints)
