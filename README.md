@@ -158,9 +158,3 @@ It performs:
   C:\Users\rajes\deploy-log.txt
   ```
 - Last deployed digest is stored in:
-  ```
-  C:\Users\rajes\.last_digest
-  ```
-  
-## 🙌 Acknowledgments
-Thanks to Docker, Kubernetes, and GitHub Actions for making full-stack CI/CD automation approachable and powerful.
