@@ -140,10 +140,11 @@ Set these in GitHub > Settings > Secrets:
 
 > Add screenshots of:
 > - GitHub Actions success
+![alt text](image.png)
 
 > - Running pod logs
+![alt text](image-1.png)
 > - Browser output
+![alt text](image-2.png)
 
 ---
-
-s
