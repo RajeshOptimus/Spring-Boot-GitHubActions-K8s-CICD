@@ -1,160 +1,148 @@
+# Spring Boot Microservice CI/CD with GitHub Actions & Kubernetes
 
-# SpringBoot-GitHubActions-K8s
-Final Project – Docker & Kubernetes Training
+This project demonstrates a complete CI/CD pipeline for a Spring Boot microservice using:
+- **Docker** for containerization
+- **Kubernetes** for orchestration
+- **GitHub Actions** with a **self-hosted runner** for automation
 
-## 🧩 Overview
+---
 
-This is a Spring Boot microservice project that demonstrates modern CI/CD and container orchestration practices. The project includes:
+## 🌟 Features
 
-- A simple REST API (`/greeting`)
-- Dockerized Spring Boot app
-- GitHub Actions CI/CD pipeline
-- Kubernetes deployment using Minikube
-- Automated polling-based redeployment using Task Scheduler and Bash scripting
+- RESTful Spring Boot microservice (`/` and `/greeting` endpoints)
+- Dockerized application
+- Kubernetes manifests (Deployment + Service)
+- CI/CD with GitHub Actions (build, test, Docker push, deploy)
+- Runs on a self-hosted Windows runner (`FARMINGZILLA`)
+
+---
+
+## 🛠️ Technologies
+
+- Java 17
+- Spring Boot
+- Maven
+- Docker
+- Kubernetes
+- GitHub Actions
 
 ---
 
 ## 📁 Project Structure
 
-```
-spring-boot-microservice-GitHubActions
-├── src/
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml
+```text
+.
+├── src/                   # Java source code
 ├── k8s/
-│   ├── deployment.yaml
-│   └── service.yaml
-├── watch-and-deploy.sh         # Checks Docker image digest and redeploys if updated
-├── run-watch-deploy.bat        # Invokes watch-and-deploy.sh via Git Bash
-├── deploy-log.txt              # Logs deployment events and pod status
-├── .last_digest                # Stores the last deployed Docker image digest
-├── Dockerfile
-├── pom.xml
-└── README.md
+│   ├── deployment.yaml    # Kubernetes Deployment
+│   └── service.yaml       # Kubernetes Service
+├── Dockerfile             # Builds container image
+├── pom.xml                # Maven configuration
+└── .github/
+    └── workflows/
+        └── ci-cd.yml     # CI/CD workflow
 ```
 
 ---
 
-## 🚀 Features
+## 🚀 Getting Started
 
-- ✅ REST API at `/greeting`
-- ✅ Containerized with Docker
-- ✅ Deployed to Kubernetes using `kubectl apply`
-- ✅ GitHub Actions CI/CD pipeline for build/test/push
-- ✅ Task Scheduler runs every 5 minutes and redeploys only on new image digest
-- ✅ Pod restart logic only on image change (optimized!)
+### 🔧 Prerequisites
 
----
-
-## 🔧 Prerequisites
-
-- Java 11+
-- Maven
-- Docker (with Docker Hub account)
-- Minikube
-- GitHub account
-- Git Bash (on Windows)
-- Windows Task Scheduler
+- Docker installed
+- Kubernetes cluster (e.g. Minikube or Docker Desktop)
+- GitHub repo with self-hosted runner connected
 
 ---
 
-## 🛠️ Setup Instructions
-
-### 1. Clone the repository
+### ▶️ Run Locally (for testing)
 
 ```bash
-git clone <your-repo-url>
-cd spring-boot-microservice-GitHubActions
-```
-
-### 2. Build the application
-
-```bash
+# Build and run with Maven
 mvn clean install
+java -jar target/*.jar
 ```
 
-### 3. Build and push Docker image
-
-```bash
-docker build -t rajeshrajatv/springboot-githubactions-k8s:latest .
-docker push rajeshrajatv/springboot-githubactions-k8s:latest
-```
-
-> Replace `rajeshrajatv` with your Docker Hub username if different.
+Access at: `http://localhost:8080/`  
+Try endpoint: `http://localhost:8080/greeting`
 
 ---
 
-### 4. Deploy to Minikube
-
-Start Minikube:
+### 🐳 Docker Commands
 
 ```bash
-minikube start --driver=docker
+# Build image
+docker build -t rajeshrajatv/springboot-githubactions-k8s:latest .
+
+# Run container
+docker run -p 8080:8080 rajeshrajatv/springboot-githubactions-k8s:latest
 ```
 
-Deploy:
+---
+
+### ☸️ Deploy to Kubernetes
 
 ```bash
 kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
 ```
 
----
-
-### 5. Run Watch-and-Deploy Script via Task Scheduler
-
-1. Create a `.bat` file (`run-watch-deploy.bat`) that calls Git Bash to run `watch-and-deploy.sh`.
-2. Register a Task Scheduler job that:
-   - Runs every 5 minutes
-   - Calls `run-watch-deploy.bat`
-   - Runs under your user account with highest privileges
-3. Script checks Docker image digest from Docker Hub and redeploys if it changed
-
----
-
-## 🌐 Access the Application
-
-Get service URL:
+Check app:
 
 ```bash
-minikube service greeting-service --url
+kubectl get pods
+kubectl get services
 ```
 
-Visit:
+If using NodePort:
 
-```
-http://<minikube-ip>:<node-port>/greeting
+```bash
+kubectl port-forward service/greeting-service 8080:8080
 ```
 
-Example:
-
-```
-http://192.168.49.2:30213/greeting
-```
+Then open: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 🔁 CI/CD Workflow
+## ⚙️ CI/CD Pipeline
 
-Your GitHub Actions workflow is defined at:
+The pipeline is defined in `.github/workflows/deploy.yml`.
 
-```
-.github/workflows/ci-cd.yml
-```
+### 🔁 It includes:
 
-It performs:
-- ✅ Code checkout
-- ✅ Maven build + test
-- ✅ Docker image build
-- ✅ Docker image push to Docker Hub
+- Code checkout
+- Java setup with Maven build
+- Docker image build & push to Docker Hub
+- Kubernetes deployment
+- Pod and rollout status checks
 
 ---
 
-## 📋 Logs
+## 🔐 Secrets Used
 
-- All actions from `watch-and-deploy.sh` are logged to:
-  ```
-  C:\Users\rajes\deploy-log.txt
-  ```
-- Last deployed digest is stored in:
+Set these in GitHub > Settings > Secrets:
+
+- `DOCKER_USERNAME` — your Docker Hub username
+- `DOCKER_PASSWORD` — your Docker Hub password or token
+
+---
+
+## 📦 Endpoints
+
+| Method | Endpoint        | Description                  |
+|--------|------------------|------------------------------|
+| GET    | `/`              | Welcome message              |
+| GET    | `/greeting`      | Returns `"Hello, World!"`    |
+
+---
+
+## 📸 Screenshots
+
+> Add screenshots of:
+> - GitHub Actions success
+
+> - Running pod logs
+> - Browser output
+
+---
+
